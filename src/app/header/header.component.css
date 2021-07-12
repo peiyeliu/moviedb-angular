@@ -1,0 +1,17 @@
+.dropdown-item{
+  height: 50px;
+  color: white;
+}
+
+.dropdown-menu{
+  background: #050a30;
+  border: 1px solid white;
+}
+
+.navbar-mybar {
+  background-color: black;
+}
+
+.form-control{
+  border-radius: 0px;
+}
