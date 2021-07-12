@@ -1,0 +1,161 @@
+<div class="mainCarousel">
+<ngb-carousel #carousel [interval]="1000" [pauseOnHover]="pauseOnHover" [pauseOnFocus]="pauseOnFocus" [showNavigationIndicators]="showcarouselIndicators" *ngIf="homePageData">
+  <ng-template ngbSlide *ngFor="let entry of homePageData['currPlaying']['results']; index as i">
+    <div class="picsum-img-wrapper">
+      <div class="hov">
+        <img [routerLink]="['/watch', 'movie', homePageData['currPlaying']['results'][i]['id']]" class="img-fluid" width="780px" src="{{homePageData['currPlaying']['results'][i].backdrop_path ? 'https://image.tmdb.org/t/p/w500'+homePageData['currPlaying']['results'][i].backdrop_path : 'assets/placeholder/movie-placeholder.jpg'}}">
+        <div class="description" style="text-align: center"><p style="position: relative; margin-top: 40px">{{homePageData['currPlaying']['results'][i]['title']}}</p></div>
+      </div>
+    </div>
+  </ng-template>
+</ngb-carousel>
+</div>
+
+<div style="margin-top: 10%" class="slide" *ngIf="continueWatchingNum > 0">
+  <h3>Continue Watching</h3>
+  <ngb-carousel #carousel [pauseOnHover]="pauseOnHover" [pauseOnFocus]="pauseOnFocus" [showNavigationIndicators]="showcarouselIndicators">
+    <ng-template ngbSlide *ngFor="let imgList of numberArray(continueWatchingRow); index as i">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-2 col-sm-12 img-box"
+               *ngFor="let idx of numberArray(col); index as j">
+              <div class="hov" style="text-align: center" *ngIf="i*col+j < continueWatchingNum">
+                <img class="img-fluid" [routerLink]="['/watch', myListDisplayed[i*col+j]['type'], myListDisplayed[i*col+j]['id']]"
+                     src="{{myListDisplayed[i*col+j]['poster']? 'https://image.tmdb.org/t/p/w500' + myListDisplayed[i*col+j]['poster'] : 'assets/placeholder/posterplaceholder.png'}}">
+                <div class="description"><p>{{myListDisplayed[i*col+j]['name']}}</p></div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ngb-carousel>
+</div>
+
+<div class="slide">
+  <h3>Popular Movies</h3>
+  <ngb-carousel #carousel [pauseOnHover]="pauseOnHover" [pauseOnFocus]="pauseOnFocus" [showNavigationIndicators]="showcarouselIndicators">
+    <ng-template ngbSlide *ngFor="let imgList of numberArray(popMovRow); index as i">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-2 img-box"
+             *ngFor="let idx of numberArray(col); index as j">
+            <div class="hov" style="text-align: center" *ngIf="i*col+j < popMovNum">
+            <img class="img-fluid"
+                 [routerLink]="['/watch', 'movie', homePageData['popMov']['results'][i*col+j]['id']]"
+                 routerLinkActive="active"
+                 src="{{homePageData['popMov']['results'][i*col+j]['poster_path'] ? 'https://image.tmdb.org/t/p/w500' + homePageData['popMov']['results'][i*col+j]['poster_path'] : 'assets/placeholder/posterplaceholder.png'}}">
+              <div class="description"><p>{{homePageData['popMov']['results'][i*col+j]['title']}}</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ngb-carousel>
+</div>
+
+
+<div class="slide">
+  <h3>Top Rated Movies</h3>
+  <ngb-carousel #carousel [pauseOnHover]="pauseOnHover" [pauseOnFocus]="pauseOnFocus" [showNavigationIndicators]="showcarouselIndicators">
+    <ng-template ngbSlide *ngFor="let imgList of numberArray(topMovRow); index as i">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-2 img-box"
+               *ngFor="let idx of numberArray(col); index as j">
+            <div class="hov" style="text-align: center" *ngIf="i*col+j < topMovNum">
+            <img class="img-fluid"
+                 [routerLink]="['/watch', 'movie', homePageData['topMov']['results'][i*col+j]['id']]"
+                 routerLinkActive="active"
+                 src="{{homePageData['topMov']['results'][i*col+j]['poster_path'] ? 'https://image.tmdb.org/t/p/w500' + homePageData['topMov']['results'][i*col+j]['poster_path'] : 'assets/placeholder/posterplaceholder.png'}}">
+              <div class="description"><p>{{homePageData['topMov']['results'][i*col+j]['title']}}</p></div></div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ngb-carousel>
+</div>
+
+<div class="slide">
+  <h3>Trending Movies</h3>
+  <ngb-carousel #carousel [pauseOnHover]="pauseOnHover" [pauseOnFocus]="pauseOnFocus" [showNavigationIndicators]="showcarouselIndicators">
+    <ng-template ngbSlide *ngFor="let imgList of numberArray(trendMovRow); index as i">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-2 img-box"
+               *ngFor="let idx of numberArray(col); index as j">
+            <div class="hov" style="text-align: center" *ngIf="i*col+j < trendMovNum">
+            <img class="img-fluid"
+                 [routerLink]="['/watch', 'movie', homePageData['trendMov']['results'][i*col+j]['id']]"
+                 routerLinkActive="active"
+                 src="{{homePageData['trendMov']['results'][i*col+j]['poster_path'] ? 'https://image.tmdb.org/t/p/w500' + homePageData['trendMov']['results'][i*col+j]['poster_path'] : 'assets/placeholder/posterplaceholder.png'}}">
+              <div class="description"><p>{{homePageData['trendMov']['results'][i*col+j]['title']}}</p></div></div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ngb-carousel>
+</div>
+
+<div class="slide">
+  <h3>Popular TV Shows</h3>
+  <ngb-carousel #carousel [pauseOnHover]="pauseOnHover" [pauseOnFocus]="pauseOnFocus" [showNavigationIndicators]="showcarouselIndicators">
+    <ng-template ngbSlide *ngFor="let imgList of numberArray(popTvRow); index as i">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-2 img-box"
+               *ngFor="let idx of numberArray(col); index as j">
+            <div class="hov" style="text-align: center" *ngIf="i*col+j < popTvNum">
+            <img class="img-fluid"
+                 [routerLink]="['/watch', 'tv', homePageData['popTv']['results'][i*col+j]['id']]"
+                 routerLinkActive="active"
+                 src="{{homePageData['popTv']['results'][i*col+j]['poster_path'] ? 'https://image.tmdb.org/t/p/w500' + homePageData['popTv']['results'][i*col+j]['poster_path'] : 'assets/placeholder/posterplaceholder.png'}}">
+              <div class="description"><p>{{homePageData['popTv']['results'][i*col+j]['name']}}</p></div></div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ngb-carousel>
+</div>
+
+<div class="slide">
+  <h3>Top Rated TV Shows</h3>
+  <ngb-carousel #carousel [pauseOnHover]="pauseOnHover" [pauseOnFocus]="pauseOnFocus" [showNavigationIndicators]="showcarouselIndicators">
+    <ng-template ngbSlide *ngFor="let imgList of numberArray(topTvRow); index as i">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-2 img-box"
+               *ngFor="let idx of numberArray(col); index as j">
+            <div class="hov" style="text-align: center" *ngIf="i*col+j < topTvNum">
+            <img class="img-fluid"
+                 [routerLink]="['/watch', 'tv', homePageData['topTv']['results'][i*col+j]['id']]"
+                 routerLinkActive="active"
+                 src="{{homePageData['topTv']['results'][i*col+j]['poster_path'] ? 'https://image.tmdb.org/t/p/w500' + homePageData['topTv']['results'][i*col+j]['poster_path'] : 'assets/placeholder/posterplaceholder.png'}}">
+              <div class="description"><p>{{homePageData['topTv']['results'][i*col+j]['name']}}</p></div></div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ngb-carousel>
+</div>
+
+<div class="slide">
+  <h3>Trending TV Shows</h3>
+  <ngb-carousel #carousel [pauseOnHover]="pauseOnHover" [pauseOnFocus]="pauseOnFocus" [showNavigationIndicators]="showcarouselIndicators">
+    <ng-template ngbSlide *ngFor="let imgList of numberArray(trendTvRow); index as i">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-2 img-box"
+               *ngFor="let idx of numberArray(col); index as j">
+            <div class="hov" style="text-align: center" *ngIf="i*col+j < trendTvNum">
+            <img class="img-fluid"
+                 [routerLink]="['/watch', 'tv', homePageData['trendTv']['results'][i*col+j]['id']]"
+                 routerLinkActive="active"
+                 src="{{homePageData['trendTv']['results'][i*col+j]['poster_path'] ? 'https://image.tmdb.org/t/p/w500' + homePageData['trendTv']['results'][i*col+j]['poster_path'] : 'assets/placeholder/posterplaceholder.png'}}">
+              <div class="description"><p>{{homePageData['trendTv']['results'][i*col+j]['name']}}</p></div></div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ngb-carousel>
+</div>
+

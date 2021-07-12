@@ -1,0 +1,87 @@
+.review-content{
+  font-size: 12px;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+::ng-deep.carousel-indicators {
+  bottom: -20%;
+}
+
+::ng-deep.carousel-control-prev{
+  left: -10%;
+}
+
+::ng-deep.carousel-control-next{
+  right: -10%;
+}
+
+.slide{
+  margin: 5% 5%;
+}
+.hov{
+  -webkit-transform:scale(0.9);
+  -moz-transform:scale(0.9);
+  -o-transform:scale(0.9);
+  opacity: 1 ;
+  filter:alpha(opacity= 100 );
+}
+
+.hov:hover{
+  -webkit-transform:scale(1.0);
+  -moz-transform:scale(1.0);
+  -o-transform:scale(1.0);
+  opacity: 0.7;
+  filter:alpha(opacity= 70);
+}
+
+.description{
+  color: white;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  visibility: hidden;
+  opacity: 0;
+  text-align: center;
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.description > p{
+  position: absolute;
+  bottom: 0;
+}
+
+.hov:hover .description{
+  visibility: visible;
+  background: linear-gradient(transparent, black);
+  opacity: 1;
+}
+
+
+.rate{
+  margin-bottom: 3%;
+  color: black;
+}
+
+.rate-star{
+  margin-left: 3%;
+  background: black;
+  color: white;
+  border-radius: 10px;
+}
+
+ngb-carousel  {
+  outline: none !important;
+}
+
+img{
+  outline: none !important;
+}
+

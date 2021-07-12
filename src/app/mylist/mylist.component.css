@@ -1,0 +1,35 @@
+.hov{
+  -webkit-transform:scale(0.9);
+  -moz-transform:scale(0.9);
+  -o-transform:scale(0.9);
+  opacity: 1 ;
+  filter:alpha(opacity= 100 );
+}
+
+.hov:hover{
+  -webkit-transform:scale(1.0);
+  -moz-transform:scale(1.0);
+  -o-transform:scale(1.0);
+
+  opacity: 0.7 ;
+  filter:alpha(opacity= 70 );
+}
+
+.description{
+  color: white;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.hov:hover .description{
+  visibility: visible;
+  opacity: 1;
+}
+
+img{
+  outline: none !important;
+}

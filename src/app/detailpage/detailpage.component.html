@@ -1,0 +1,165 @@
+<div class="container" style="margin-top: 5%; margin-left: 5%; margin-right: 5%" *ngIf="detail">
+  <div class="row" >
+    <div id="youtubevideo" class="col-lg-7 embed-responsive embed-responsive-16by9"><youtube-player videoId="{{detail['youtube']}}"></youtube-player></div>
+    <div class="col-lg-5">
+      <h2>{{detail['detailData']['original_title'] ? detail['detailData']['original_title'] : detail['detailData']['name']}}</h2>
+      <p>{{detail['detailData']['tagline']}}</p>
+      <p>{{detail['detailData']['year']}} | &#9733;&nbsp;{{detail['detailData']['vote_average']}} | {{detail['detailData']['time']}}</p>
+      <p><b>Genres: </b>{{detail['detailData']['genreStr']}}</p>
+      <p><b>Spoken Language: </b>{{detail['detailData']['languageStr']}}</p>
+      <div>
+        <button (click)="addOrRemoveMyList()" type="button" class="btn btn-primary">{{buttonHTML}}</button>
+
+        <ngb-alert #alert type="success" style="margin-top: 2%" *ngIf="clicked && itemAdded" class="alert alert-success alert-dismissible fade show" role="alert">
+          Added to watchlist.
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </ngb-alert>
+
+        <ngb-alert #removealert type="success" style="margin-top: 2%" *ngIf="clicked && !itemAdded" class="alert alert-danger alert-dismissible fade show" role="alert">
+          Removed from watchlist.
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </ngb-alert>
+      </div>
+
+    </div>
+  </div>
+  <div class="row" style="margin-top: 3%">
+    <p><b>Description: </b><br><span>{{detail['detailData']['overview']}}</span></p>
+  </div>
+  <div class="row">
+    <b>Share</b>
+  </div>
+  <div class="row">
+      <span>
+        <a class="twitter-share-button"
+           href="https://twitter.com/intent/tweet?text={{tweetShareURL}}">
+          <i class="fab fa-twitter fa-2x" style="color: #1D91FF"></i></a>
+      </span>
+      <span style="margin-left: 1%">
+        <div data-href="https://developers.facebook.com/docs/plugins/" data-size="small">
+          <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D{{detail['youtube']}}&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">
+            <i class="fab fa-facebook-square fa-2x" style="color: #1500FF"></i>
+          </a>
+        </div>
+      </span>
+  </div>
+</div>
+
+<div class="slide" *ngIf="detail">
+  <h3>Full Cast and Crew</h3>
+    <div class="container-fluid">
+    <div class="row flex-row flex-nowrap" style="overflow: scroll">
+      <div class="col-lg-2 col-6" style="color: black" *ngFor="let entry of detail['allCastData']['cast']; index as i">
+        <div class="card card-block"  (click)="showCastDetail(detail['allCastData']['cast'][i]['id'])" data-toggle="modal" data-target="#myModal">
+          <img class="card-img-top" src="https://image.tmdb.org/t/p/w500{{detail['allCastData']['cast'][i]['profile_path']}}" alt="Card image cap">
+          <div class="card-body" style="text-align: center; font-size: small">
+            <p><b>{{detail['allCastData']['cast'][i]['name']}}<br>AS</b><br>{{detail['allCastData']['cast'][i]['character']}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true" style="color: black; margin: auto" *ngIf="cast">
+  <div class="modal-dialog modal-lg" *ngIf="castDetailOpened == true" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{cast['cast']['name']}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body row">
+        <div class="col-lg-4 col-12">
+          <img class="img-fluid" src="https://image.tmdb.org/t/p/w500{{cast['cast']['profile_path']}}">
+        </div>
+        <div class="col-lg-8 col-12">
+          <p>Birth: <span *ngIf="cast['cast']['birthday']">{{cast['cast']['birthday']}}</span><br>
+          Birth Place: <span *ngIf="cast['cast']['place_of_birth']">{{cast['cast']['place_of_birth']}}</span><br>
+          Gender: <span *ngIf="cast['cast']['gender']">{{cast['cast']['gender'] === 1 ? 'Female' : 'Male'}}</span><br>
+            Known for: <span *ngIf="cast['cast']['known_for_department']">{{cast['cast']['known_for_department']}}</span>
+            <br> Also Known as: {{cast['alsoKnownAs']}}<br>
+          </p>
+          <div>
+            <span *ngIf="cast['external']['imdb_id'] != null && cast['external']['imdb_id'].length > 0">
+              <a href="https://www.imdb.com/name/{{cast['external']['imdb_id']}}"><i class="fab fa-imdb fa-2x" style="color: #E3B52B"></i></a></span>
+            <span style="margin-left: 1%" *ngIf="cast['external']['instagram_id'] != null && cast['external']['instagram_id'].length > 0">
+              <a href="https://www.instagram.com/{{cast['external']['instagram_id']}}"><i class="fab fa-instagram fa-2x" style="color: #830583"></i></a></span>
+            <span style="margin-left: 1%" *ngIf="cast['external']['facebook_id'] != null && cast['external']['facebook_id'].length > 0">
+              <a href="https://www.facebook.com/{{cast['external']['facebook_id']}}"><i class="fab fa-facebook-square fa-2x" style="color: #1500FF"></i></a></span>
+            <span style="margin-left: 1%" *ngIf="cast['external']['twitter_id'] != null && cast['external']['twitter_id'].length > 0">
+              <a href="https://twitter.com/{{cast['external']['twitter_id']}}"><i class="fab fa-twitter fa-2x" style="color: #1D91FF"></i></a></span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-left: 3%; margin-right: 3%; margin-bottom: 3%" *ngIf="cast['cast']['biography']"><h4>Biography:</h4> <br>{{cast['cast']['biography']}}</div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" *ngIf="detail">
+  <h3>Reviews &nbsp;&nbsp;&nbsp;<span style="color: gray">{{detail['reviewData']['results'].length}}</span></h3>
+  <div class="container">
+    <div class="card rate" *ngFor="let entry of detail['reviewData']['results']; index as i">
+      <div class="row">
+      <div class="col-lg-3 col-12" style="text-align: center">
+        <img style="max-width: 30%; margin-top: 5%; height: auto" src="{{detail['reviewData']['results'][i]['author_details']['avatar_path'] ? detail['reviewData']['results'][i]['author_details']['avatar_path'] : 'assets/placeholder/ReviewsPlaceholderImage.jpg'}}">
+      </div>
+      <div class="col-lg-9 col-12">
+        <div><span  style="font-size: xx-large">A review created by {{detail['reviewData']['results'][i]['author']}}</span>
+        <span class="rate-star" *ngIf="detail['reviewData']['results'][i]['author_details']['rating']">&nbsp;&nbsp;<i class="fas fa-star"></i>&nbsp;{{detail['reviewData']['results'][i]['author_details']['rating']}}&nbsp;&nbsp;</span></div>
+        <p style="color: gray">Written by {{detail['reviewData']['results'][i]['author']}}, on {{detail['reviewData']['results'][i]['created_at']}}</p>
+        <p class="review-content">{{detail['reviewData']['results'][i]['content']}}</p>
+        <a href="https://www.themoviedb.org/review/{{detail['reviewData']['results'][i]['id']}}">Read the rest</a>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" *ngIf="detail && detail['recomData']['results'][0]">
+  <h3>Recommended {{detail['type']}}</h3>
+  <ngb-carousel #carousel [pauseOnHover]="pauseOnHover" [pauseOnFocus]="pauseOnFocus" [showNavigationIndicators]="showcarouselIndicators">
+    <ng-template ngbSlide *ngFor="let imgList of numberArray(recommendRow); index as i">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-2 img-box"
+               *ngFor="let idx of numberArray(col); index as j">
+            <div class="hov" *ngIf="detail['recomData']['results'][i*col+j] != null">
+            <img
+              class="img-fluid"
+              [routerLink]="['/watch', detail['typeurl'], detail['recomData']['results'][i*col+j]['id']]"
+              src="{{detail['recomData']['results'][i*col+j]['poster_path']?'https://image.tmdb.org/t/p/w500'+detail['recomData']['results'][i*col+j]['poster_path']: 'assets/placeholder/posterplaceholder.png'}}">
+              <div class="description"><p>{{detail['recomData']['results'][i*col+j]['title'] ? detail['recomData']['results'][i*col+j]['title'] : detail['similarData']['results'][i*col+j]['name']}}</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ngb-carousel>
+</div>
+
+<div class="slide" *ngIf="detail && detail['similarData']['results'][0]">
+  <h3>Similar {{detail['type']}}</h3>
+  <ngb-carousel #carousel [pauseOnHover]="pauseOnHover" [pauseOnFocus]="pauseOnFocus" [showNavigationIndicators]="showcarouselIndicators">
+    <ng-template ngbSlide *ngFor="let imgList of numberArray(similarRow); index as i">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-2 img-box"
+               *ngFor="let idx of numberArray(col); index as j">
+            <div class="hov" *ngIf="detail['similarData']['results'][i*col+j] != null">
+            <img class="img-fluid" [routerLink]="['/watch', detail['typeurl'], detail['similarData']['results'][i*col+j]['id']]"
+                 src="{{detail['similarData']['results'][i*col+j]['poster_path'] ? 'https://image.tmdb.org/t/p/w500'+detail['similarData']['results'][i*col+j]['poster_path'] : 'assets/placeholder/posterplaceholder.png'}}">
+              <div class="description"><p>{{detail['similarData']['results'][i*col+j]['title'] ? detail['similarData']['results'][i*col+j]['title'] : detail['similarData']['results'][i*col+j]['name']}}</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ngb-carousel>
+</div>

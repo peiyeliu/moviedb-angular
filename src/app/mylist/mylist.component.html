@@ -1,0 +1,22 @@
+<h3 style="margin-top: 3%; margin-left: 5%">My WatchList</h3>
+
+<div class="container" *ngIf="numOfItems > 0">
+  <div *ngFor="let rownum of numberArray(row); index as i">
+    <div class="container">
+      <div class="row" style="margin-top: 3%">
+        <div class="col-lg-2 img-box"
+             *ngFor="let colnum of numberArray(col); index as j">
+          <div class="hov" style="text-align: center" *ngIf="i*col+j < numOfItems">
+            <img class="img-fluid" [routerLink]="['/watch', myListDisplayed[i*col+j]['type'], myListDisplayed[i*col+j]['id']]"
+                 src="{{myListDisplayed[i*col+j]['poster'] ? 'https://image.tmdb.org/t/p/w500'+myListDisplayed[i*col+j]['poster']: 'assets/placeholder/posterplaceholder.png'}}">
+            <div class="description">{{myListDisplayed[i*col+j]['name']}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" *ngIf="numOfItems == 0" style="text-align: center; min-height: 700px;">
+  <p style="font-size: 40px">No items found in Watchlist.</p>
+</div>
