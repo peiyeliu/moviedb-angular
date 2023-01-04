@@ -1,0 +1,8 @@
+*.scss -linguist-detectable
+*.svg -linguist-detectable
+*.less -linguist-detectable
+
+
+node_modules  -linguist-detectable
+dist  -linguist-detectable
+backend/node_modules/  -linguist-detectable
