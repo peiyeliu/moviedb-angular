@@ -4,14 +4,15 @@ const app = express();
 const cors = require('cors')
 
 app.use(cors())
+require('dotenv').config();
 
-const apiKey = 'YOUR_TMDB_API_KEY';
-const base = 'https://api.themoviedb.org/3';
-const tail = '?api_key=' + apiKey + '&language=en-US&page=1';
+const apiKey = process.env.API_KEY;
 
-const monthList = ['Dummy', 'January', 'February', "March", 'April', 'May', 'June',
+const prefix = 'https://api.themoviedb.org/3';
+const suffix  = '?api_key=' + apiKey + '&language=en-US&page=1';
+
+const monthList = ['', 'January', 'February', "March", 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'];
-const amorpm = ['AM', 'PM'];
 
 const DEFAULT_VIDEO_ID = 'tzkWB85ULJY';
 
@@ -127,12 +128,12 @@ app.get('/watch/*/*', function (req, res) {
         similarData: null,
         recomData: null
     };
-    const detailURL = base + req.url.substring(6) + tail;
-    const youtubeURL = base + req.url.substring(6) + '/videos' + tail;
-    const allCastURL = base + req.url.substring(6) + '/credits' + tail;
-    const reviewURL = base + req.url.substring(6) + '/reviews' + tail;
-    const similarURL = base + req.url.substring(6) + '/similar' + tail;
-    const recomURL = base + req.url.substring(6) + '/recommendations' + tail;
+    const detailURL = prefix + req.url.substring(6) + suffix;
+    const youtubeURL = prefix + req.url.substring(6) + '/videos' + suffix;
+    const allCastURL = prefix + req.url.substring(6) + '/credits' + suffix;
+    const reviewURL = prefix + req.url.substring(6) + '/reviews' + suffix;
+    const similarURL = prefix + req.url.substring(6) + '/similar' + suffix;
+    const recomURL = prefix + req.url.substring(6) + '/recommendations' + suffix;
 
     if (req.url.substring(7, 9) === 'tv') {
         elementData.type = 'TV Shows';
@@ -192,14 +193,14 @@ app.get('/watch/*/*', function (req, res) {
                 var year = timestamp.substring(0, 4);
                 var minsec = timestamp.substring(13, 19);
                 var hour = parseInt(timestamp.substring(11, 13));
-                var isPM = 0;
+                var isPM = 'AM';
                 if (hour >= 12) {
-                    isPM = 1;
+                    isPM = 'PM';
                     if (hour > 12) {
                         hour -= 12;
                     }
                 }
-                reviewtime = month + " " + date + ", " + year + " " + hour + minsec + " " + amorpm[isPM];
+                reviewtime = month + " " + date + ", " + year + " " + hour + minsec + " " + isPM;
                 elementData.reviewData.results[i]['created_at'] = reviewtime;
                 elementData.reviewData.results[i]['author_details']['avatar_path'] = avatarPathParser(elementData.reviewData.results[i]['author_details']['avatar_path']);
 
@@ -305,8 +306,6 @@ app.get('/person/*', function (req, res) {
         }
     ))
 })
-
-
 
 
 const PORT = process.env.PORT || 3000;
