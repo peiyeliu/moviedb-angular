@@ -153,4 +153,8 @@ export class DetailpageComponent implements OnInit {
     this.similarRow = Math.ceil(this.similarNum / this.col);
     this.recommendRow = Math.ceil(this.recommendNum / this.col);
   }
+
+  getNumberOfColumns(): number {
+    return window.innerWidth >= 992 ? 6 : 1; // Adjust the breakpoint as needed
+  }
 }

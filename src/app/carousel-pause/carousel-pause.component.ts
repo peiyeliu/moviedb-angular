@@ -34,10 +34,6 @@ export class CarouselPauseComponent implements OnChanges, OnInit{
 
   col = 6;
 
-  getNumberOfColumns(): number {
-    return window.innerWidth >= 992 ? 6 : 1; // Adjust the breakpoint as needed
-  }
-
   constructor(private breakpointObserver: BreakpointObserver, private service: Service, private router: Router) {
 
   }
@@ -111,4 +107,7 @@ export class CarouselPauseComponent implements OnChanges, OnInit{
     return new Array(num);
   }
 
+  getNumberOfColumns(): number {
+    return window.innerWidth >= 992 ? 6 : 1; // Adjust the breakpoint as needed
+  }
 }

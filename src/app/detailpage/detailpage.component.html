@@ -129,7 +129,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-2 img-box"
-               *ngFor="let idx of numberArray(col); index as j">
+               *ngFor="let idx of numberArray(getNumberOfColumns()); index as j">
             <div class="hov" *ngIf="detail['recomData']['results'][i*col+j] != null">
             <img
               class="img-fluid"
@@ -151,7 +151,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-2 img-box"
-               *ngFor="let idx of numberArray(col); index as j">
+               *ngFor="let idx of numberArray(getNumberOfColumns()); index as j">
             <div class="hov" *ngIf="detail['similarData']['results'][i*col+j] != null">
             <img class="img-fluid" [routerLink]="['/watch', detail['typeurl'], detail['similarData']['results'][i*col+j]['id']]"
                  src="{{detail['similarData']['results'][i*col+j]['poster_path'] ? 'https://image.tmdb.org/t/p/w500'+detail['similarData']['results'][i*col+j]['poster_path'] : 'assets/placeholder/posterplaceholder.png'}}">
