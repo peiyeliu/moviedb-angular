@@ -16,18 +16,26 @@ const monthList = ['', 'January', 'February', "March", 'April', 'May', 'June',
 
 const DEFAULT_VIDEO_ID = 'tzkWB85ULJY';
 
+
+const currPlayingUrl = 'https://api.themoviedb.org/3/movie/now_playing?api_key=' + apiKey + '&language=en-US&page=1';
+const popMovUrl = 'https://api.themoviedb.org/3/movie/popular?api_key=' + apiKey + '&language=en-US&page=1';
+const trendMovUrl = 'https://api.themoviedb.org/3/trending/movie/day?api_key=' + apiKey;
+const topMovUrl = 'https://api.themoviedb.org/3/movie/top_rated?api_key=' + apiKey + '&language=en-US&page=1';
+const popTvUrl = 'https://api.themoviedb.org/3/tv/popular?api_key=' + apiKey + '&language=en-US&page=1';
+const trendTvUrl = 'https://api.themoviedb.org/3/trending/tv/day?api_key=' + apiKey;
+const topTvUrl = 'https://api.themoviedb.org/3/tv/top_rated?api_key=' + apiKey + '&language=en-US&page=1';
+
+
+
+
+
+
+
+
 /**
  * get homepage data
  */
 app.get('/', function (req, res) {
-    const currPlayingUrl = 'https://api.themoviedb.org/3/movie/now_playing?api_key=' + apiKey + '&language=en-US&page=1';
-    const popMovUrl = 'https://api.themoviedb.org/3/movie/popular?api_key=' + apiKey + '&language=en-US&page=1';
-    const trendMovUrl = 'https://api.themoviedb.org/3/trending/movie/day?api_key=' + apiKey;
-    const topMovUrl = 'https://api.themoviedb.org/3/movie/top_rated?api_key=' + apiKey + '&language=en-US&page=1';
-    const popTvUrl = 'https://api.themoviedb.org/3/tv/popular?api_key=' + apiKey + '&language=en-US&page=1';
-    const trendTvUrl = 'https://api.themoviedb.org/3/trending/tv/day?api_key=' + apiKey;
-    const topTvUrl = 'https://api.themoviedb.org/3/tv/top_rated?api_key=' + apiKey + '&language=en-US&page=1';
-
     const homePageData = {
         currPlaying: null,
         popMov: null,
@@ -65,53 +73,128 @@ app.get('/', function (req, res) {
 });
 
 
-/**
- * get search data when use type in the search box
- */
-app.get('/search/*', function (req, res) {
-    if (req.url.substring(8) === "") {
-        let searchData = {
-            results: []
-        }
-        return res.json(searchData);
-    }
-    const searchURL = 'https://api.themoviedb.org/3/search/multi?api_key=YOUR_TMDB_API_KEY&language=en-US&query=' + req.url.substring(8);
-    axios.get(searchURL).then(
-        response => {
-            let searchData = {
-                results: []
+app.get('/topmovie', function (req, res) {
+    axios.all([
+        axios.get(topMovUrl),
+    ]).then(
+        axios.spread(
+            function (ret) {
+                res.json(ret.data);
             }
-            let resultNum = 10;
-            if (response.data.results.length < 10) {
-                resultNum = response.data.results.length;
-            }
-            let index = 0;
-
-            for (let i = 0; i < resultNum; i++) {
-                if (response.data.results[i] === null || response.data.results[i]['backdrop_path'] === null) {
-                    continue;
-                }
-
-                if (response.data.results[i]['media_type'] === 'tv' || response.data.results[i]['media_type'] === 'movie') {
-                    searchData.results[index] = {};
-                    searchData.results[index]['type'] = response.data.results[i]['media_type'];
-                    searchData.results[index]['path'] = response.data.results[i]['backdrop_path'];
-                    searchData.results[index]['id'] = response.data.results[i]['id'];
-
-                    if (response.data.results[i]['media_type'] === 'tv') {
-                        searchData.results[index]['name'] = response.data.results[i]['name'];
-                    } else {
-                        searchData.results[index]['name'] = response.data.results[i]['original_title'];
-                    }
-                    index++;
-                }
-            }
-            return res.json(searchData);
-        }
+        )
     ).catch(error => {
         console.log(error);
     });
 });
+
+app.get('/popmovie', function (req, res) {
+    axios.all([
+        axios.get(popMovUrl),
+    ]).then(
+        axios.spread(
+            function (ret) {
+                res.json(ret.data);
+            }
+        )
+    ).catch(error => {
+        console.log(error);
+    });
+});
+
+app.get('/currentmovie', function (req, res) {
+    axios.all([
+        axios.get(currPlayingUrl),
+    ]).then(
+        axios.spread(
+            function (ret) {
+                res.json(ret.data);
+            }
+        )
+    ).catch(error => {
+        console.log(error);
+    });
+});
+
+app.get('/toptv', function (req, res) {
+    axios.all([
+        axios.get(topTvUrl),
+    ]).then(
+        axios.spread(
+            function (ret) {
+                res.json(ret.data);
+            }
+        )
+    ).catch(error => {
+        console.log(error);
+    });
+});
+
+app.get('/poptv', function (req, res) {
+    axios.all([
+        axios.get(popTvUrl),
+    ]).then(
+        axios.spread(
+            function (ret) {
+                res.json(ret.data);
+            }
+        )
+    ).catch(error => {
+        console.log(error);
+    });
+});
+
+app.get('/currenttv', function (req, res) {
+    axios.all([
+        axios.get(trendTvUrl),
+    ]).then(
+        axios.spread(
+            function (ret) {
+                res.json(ret.data);
+            }
+        )
+    ).catch(error => {
+        console.log(error);
+    });
+});
+
+
+
+/**
+ * get search data when use type in the search box
+ */
+app.get('/search/*', async (req, res) => {
+    if (req.url.substring(8) === "") {
+        const searchData = {
+            results: []
+        };
+        return res.json(searchData);
+    }
+
+    const searchURL = `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&language=en-US&query=${req.url.substring(8)}`;
+
+    try {
+        const response = await axios.get(searchURL);
+        const resultNum = Math.min(response.data.results.length, 10);
+
+        const searchData = {
+            results: response.data.results
+                .slice(0, resultNum)
+                .filter(result => result && result.backdrop_path !== null)
+                .filter(result => result.media_type === 'tv' || result.media_type === 'movie')
+                .map(result => ({
+                    type: result.media_type,
+                    path: result.backdrop_path,
+                    id: result.id,
+                    name: result.media_type === 'tv' ? result.name : result.original_title
+                }))
+        };
+
+        return res.json(searchData);
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 
 
 /**
@@ -154,33 +237,17 @@ app.get('/watch/*/*', function (req, res) {
     ]).then(
         axios.spread(function (detail, youtube, allCast, review, similar, recom) {
 
+            let year;
             elementData.detailData = detail.data;
-
-            if (youtube.data['results'][0] != null) {
-                elementData.youtube = youtube.data['results'][0]['key'];
-            } else {
-                elementData.youtube = DEFAULT_VIDEO_ID;
-            }
-
+            elementData.youtube = youtube.data['results'][0]?.key || DEFAULT_VIDEO_ID;
             elementData.allCastData = allCast.data;
-            let tempCastData = {
-                cast: []
+            elementData.allCastData = {
+                cast: allCast.data.cast.filter(cast => cast.profile_path !== null)
             };
-            let idx = 0;
-            for (let i = 0; i < allCast.data.cast.length; i++) {
-                if (allCast.data.cast[i]['profile_path'] == null) {
-                    continue;
-                }
-                tempCastData.cast[idx] = allCast.data.cast[i];
-                idx++;
-            }
-            elementData.allCastData = tempCastData;
 
-            elementData.reviewData = review.data;
-
-            if (elementData.reviewData.results.length > 10) {
-                elementData.reviewData.results = elementData.reviewData.results.slice(0, 10);
-            }
+            elementData.reviewData = {
+                results: review.data.results.slice(0, 10)
+            };
 
             for (let i = 0; i < elementData.reviewData.results.length; i++) {
                 if (elementData.reviewData.results[i]['created_at'] === null) {
@@ -190,7 +257,7 @@ app.get('/watch/*/*', function (req, res) {
                 var timestamp = elementData.reviewData.results[i]['created_at'];
                 var month = monthList[parseInt(timestamp.substring(5, 7))];
                 var date = timestamp.substring(8, 10);
-                var year = timestamp.substring(0, 4);
+                year = timestamp.substring(0, 4);
                 var minsec = timestamp.substring(13, 19);
                 var hour = parseInt(timestamp.substring(11, 13));
                 var isPM = 'AM';
@@ -203,50 +270,36 @@ app.get('/watch/*/*', function (req, res) {
                 reviewtime = month + " " + date + ", " + year + " " + hour + minsec + " " + isPM;
                 elementData.reviewData.results[i]['created_at'] = reviewtime;
                 elementData.reviewData.results[i]['author_details']['avatar_path'] = avatarPathParser(elementData.reviewData.results[i]['author_details']['avatar_path']);
-
             }
 
             elementData.similarData = similar.data;
             elementData.recomData = recom.data;
 
-            var year = "";
-            if (elementData.detailData['release_date'] != null) {
-                year = elementData.detailData['release_date'].substring(0, 4);
-            } else if (elementData.detailData['first_air_date'] != null) {
-                year = elementData.detailData['first_air_date'].substring(0, 4);
+            year = (elementData.detailData['release_date'] ?? elementData.detailData['first_air_date'])?.substring(0, 4) || "";
+
+            let time = "";
+            if (elementData.detailData.runtime != null) {
+                const runtime = elementData.detailData.runtime;
+                const hour = Math.trunc(runtime / 60);
+                const min = runtime % 60;
+                const hourStr = hour > 1 ? "hrs" : "hr";
+                const minStr = min > 1 ? "mins" : "min";
+                time = `${hour} ${hourStr} ${min} ${minStr}`;
+            } else if (
+                elementData.detailData.episode_run_time != null &&
+                elementData.detailData.episode_run_time.length > 0
+            ) {
+                const runtime = elementData.detailData.episode_run_time[0];
+                const hour = Math.trunc(runtime / 60);
+                const min = runtime % 60;
+                const hourStr = hour > 1 ? "hrs" : "hr";
+                const minStr = min > 1 ? "mins" : "min";
+                time = `${hour} ${hourStr} ${min} ${minStr}`;
             }
-            var time = "";
-            var hour = 0;
-            var min = 0;
-            var hourStr = "";
-            var minStr = "";
-            if (elementData.detailData['runtime'] != null) {
-                hour = Math.trunc(elementData.detailData['runtime'] / 60);
-                min = elementData.detailData['runtime'] % 60;
-                hourStr = hour > 1 ? "hrs " : "hr";
-                minStr = min > 1 ? "mins" : "min";
-                time = hour + hourStr + " " + min + minStr;
-            } else if (elementData.detailData['episode_run_time'] != null && elementData.detailData['episode_run_time'].length > 0) {
-                hour = Math.trunc(elementData.detailData['episode_run_time'][0] / 60);
-                min = elementData.detailData['episode_run_time'][0] % 60;
-                hourStr = hour > 1 ? "hrs " : "hr";
-                minStr = min > 1 ? "mins" : "min";
-                time = hour + hourStr + " " + min + minStr;
-            }
-            var genreStr = "";
-            var languageStr = "";
-            for (let i = 0; i < elementData.detailData['genres'].length; i++) {
-                genreStr += elementData.detailData['genres'][i]['name'];
-                if (i < elementData.detailData['genres'].length - 1) {
-                    genreStr += ', ';
-                }
-            }
-            for (let i = 0; i < elementData.detailData['spoken_languages'].length; i++) {
-                languageStr += elementData.detailData['spoken_languages'][i]['name'];
-                if (i < elementData.detailData['spoken_languages'].length - 1) {
-                    languageStr += ', ';
-                }
-            }
+
+            let genreStr = elementData.detailData.genres.map(genre => genre.name).join(', ');
+            let languageStr = elementData.detailData.spoken_languages.map(language => language.name).join(', ');
+
             elementData.detailData['year'] = year;
             elementData.detailData['time'] = time;
             elementData.detailData['genreStr'] = genreStr;
@@ -283,8 +336,8 @@ function avatarPathParser(p) {
  * get the data of casts
  */
 app.get('/person/*', function (req, res) {
-    const castURL = 'https://api.themoviedb.org/3/person/' + req.url.substring(8) + '?api_key=YOUR_TMDB_API_KEY&language=en-US&page=1';
-    const externalURL = 'https://api.themoviedb.org/3/person/' + req.url.substring(8) + '/external_ids?api_key=YOUR_TMDB_API_KEY&language=en-US&page=1';
+    const castURL = 'https://api.themoviedb.org/3/person/' + req.url.substring(8) + '?api_key=' + apiKey + '&language=en-US&page=1';
+    const externalURL = 'https://api.themoviedb.org/3/person/' + req.url.substring(8) + '/external_ids?api_key=' + apiKey + '&language=en-US&page=1';
     const person = {
         cast: null,
         external: null,
