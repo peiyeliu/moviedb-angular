@@ -34,3 +34,4 @@ package-lock.json
 backend/.env
 .env
 .env.prod
+proxy.conf.json
