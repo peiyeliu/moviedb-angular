@@ -135,8 +135,7 @@
               class="img-fluid"
               [routerLink]="['/watch', detail['typeurl'], detail['recomData']['results'][i*col+j]['id']]"
               src="{{detail['recomData']['results'][i*col+j]['poster_path']?'https://image.tmdb.org/t/p/w500'+detail['recomData']['results'][i*col+j]['poster_path']: 'assets/placeholder/posterplaceholder.png'}}">
-<!--              Cannot read properties of undefined (reading 'name')-->
-              <div class="description"><p>{{detail['recomData']['results'][i*col+j]['title'] ? detail['recomData']['results'][i*col+j]['title'] : detail['similarData']['results'][i*col+j]['name']}}</p></div>
+              <div class="description"><p>{{detail['recomData']['results'][i*col+j]['title'] ? detail['recomData']['results'][i*col+j]['title'] : detail['recomData']['results'][i*col+j]['name']}}</p></div>
             </div>
           </div>
         </div>

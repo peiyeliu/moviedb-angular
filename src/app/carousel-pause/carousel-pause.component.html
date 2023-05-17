@@ -18,7 +18,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-2 col-sm-12 img-box"
-               *ngFor="let idx of numberArray(col); index as j">
+               *ngFor="let idx of numberArray(getNumberOfColumns()); index as j">
               <div class="hov" style="text-align: center" *ngIf="i*col+j < continueWatchingNum">
                 <img class="img-fluid" [routerLink]="['/watch', myListDisplayed[i*col+j]['type'], myListDisplayed[i*col+j]['id']]"
                      src="{{myListDisplayed[i*col+j]['poster']? 'https://image.tmdb.org/t/p/w500' + myListDisplayed[i*col+j]['poster'] : 'assets/placeholder/posterplaceholder.png'}}">
@@ -38,7 +38,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-2 img-box"
-             *ngFor="let idx of numberArray(col); index as j">
+               *ngFor="let idx of numberArray(getNumberOfColumns()); index as j">
             <div class="hov" style="text-align: center" *ngIf="i*col+j < popMovNum">
             <img class="img-fluid"
                  [routerLink]="['/watch', 'movie', homePageData['popMov']['results'][i*col+j]['id']]"
@@ -61,7 +61,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-2 img-box"
-               *ngFor="let idx of numberArray(col); index as j">
+               *ngFor="let idx of numberArray(getNumberOfColumns()); index as j">
             <div class="hov" style="text-align: center" *ngIf="i*col+j < topMovNum">
             <img class="img-fluid"
                  [routerLink]="['/watch', 'movie', homePageData['topMov']['results'][i*col+j]['id']]"
@@ -82,7 +82,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-2 img-box"
-               *ngFor="let idx of numberArray(col); index as j">
+               *ngFor="let idx of numberArray(getNumberOfColumns()); index as j">
             <div class="hov" style="text-align: center" *ngIf="i*col+j < trendMovNum">
             <img class="img-fluid"
                  [routerLink]="['/watch', 'movie', homePageData['trendMov']['results'][i*col+j]['id']]"
@@ -103,7 +103,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-2 img-box"
-               *ngFor="let idx of numberArray(col); index as j">
+               *ngFor="let idx of numberArray(getNumberOfColumns()); index as j">
             <div class="hov" style="text-align: center" *ngIf="i*col+j < popTvNum">
             <img class="img-fluid"
                  [routerLink]="['/watch', 'tv', homePageData['popTv']['results'][i*col+j]['id']]"
@@ -124,7 +124,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-2 img-box"
-               *ngFor="let idx of numberArray(col); index as j">
+               *ngFor="let idx of numberArray(getNumberOfColumns()); index as j">
             <div class="hov" style="text-align: center" *ngIf="i*col+j < topTvNum">
             <img class="img-fluid"
                  [routerLink]="['/watch', 'tv', homePageData['topTv']['results'][i*col+j]['id']]"
@@ -145,7 +145,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-2 img-box"
-               *ngFor="let idx of numberArray(col); index as j">
+               *ngFor="let idx of numberArray(getNumberOfColumns()); index as j">
             <div class="hov" style="text-align: center" *ngIf="i*col+j < trendTvNum">
             <img class="img-fluid"
                  [routerLink]="['/watch', 'tv', homePageData['trendTv']['results'][i*col+j]['id']]"
