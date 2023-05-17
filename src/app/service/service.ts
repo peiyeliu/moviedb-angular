@@ -12,8 +12,11 @@ import {Observable} from 'rxjs';
 })
 
 export class Service{
-  private REST_API_SERVER = 'http://localhost:3000';
+
+  private REST_API_SERVER: string;
+
   constructor(private httpClient: HttpClient) {
+    this.REST_API_SERVER = '/api';
   }
 
   getSearchResult(term): Observable<any>{
