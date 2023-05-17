@@ -9,52 +9,67 @@ require('dotenv').config();
 const apiKey = process.env.API_KEY;
 
 const prefix = 'https://api.themoviedb.org/3';
-const suffix  = '?api_key=' + apiKey + '&language=en-US&page=1';
-
-const monthList = ['', 'January', 'February', "March", 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'];
+const suffix  = `?api_key=${apiKey}&language=en-US&page=1`;
 
 const DEFAULT_VIDEO_ID = 'tzkWB85ULJY';
 
-
-const currPlayingUrl = 'https://api.themoviedb.org/3/movie/now_playing?api_key=' + apiKey + '&language=en-US&page=1';
-const popMovUrl = 'https://api.themoviedb.org/3/movie/popular?api_key=' + apiKey + '&language=en-US&page=1';
-const trendMovUrl = 'https://api.themoviedb.org/3/trending/movie/day?api_key=' + apiKey;
-const topMovUrl = 'https://api.themoviedb.org/3/movie/top_rated?api_key=' + apiKey + '&language=en-US&page=1';
-const popTvUrl = 'https://api.themoviedb.org/3/tv/popular?api_key=' + apiKey + '&language=en-US&page=1';
-const trendTvUrl = 'https://api.themoviedb.org/3/trending/tv/day?api_key=' + apiKey;
-const topTvUrl = 'https://api.themoviedb.org/3/tv/top_rated?api_key=' + apiKey + '&language=en-US&page=1';
-
+const currPlayingUrl = `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&language=en-US&page=1`;
+const popMovUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=1`;
+const trendMovUrl = `https://api.themoviedb.org/3/trending/movie/day?api_key=${apiKey}`;
+const topMovUrl = `https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}&language=en-US&page=1`;
+const popTvUrl = `https://api.themoviedb.org/3/tv/popular?api_key=${apiKey}&language=en-US&page=1`;
+const trendTvUrl = `https://api.themoviedb.org/3/trending/tv/day?api_key=${apiKey}`;
+const topTvUrl = `https://api.themoviedb.org/3/tv/top_rated?api_key=${apiKey}&language=en-US&page=1`;
 
 
+/**
+ * this function will convert time format for movie/tv reviews
+ * @param input the input format is '2023-04-21T20:21:15.742Z'
+ * @returns {string} the output format is 'Apr 21,2023 8:21:15 PM'
+ * an empty string will be returned if the input is invalid
+ */
+function convertTimeFormat(input) {
+    if (!input) {return '';}
+    const date = new Date(input);
+    if (isNaN(date)) {return '';}
+    const month = new Intl.DateTimeFormat('en', { month: 'short' }).format(date);
+    const day = date.getDate();
+    const year = date.getFullYear();
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    const second = date.getSeconds();
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const formattedHour = hour % 12 || 12;
+    return `${month} ${day},${year} ${formattedHour}:${minute}:${second} ${period}`;
+}
 
 
-
+/**
+ * this function will parse the reviewer image path in string format
+ * if the path is invalid, return a default image
+ * @param p the path
+ * @returns {string} the reviewer image path for the front-end
+ */
+function avatarPathParser(p) {
+    if (p === null || p.length === 0) {
+        return 'https://bytes.usc.edu/cs571/s21_JSwasm00/hw/HW8/ReviewsPlaceholderImage.jpg';
+    }
+    if (p.startsWith('/https')) {
+        return p.substring(1);
+    } else if (p.startsWith('/')) {
+        return 'https://image.tmdb.org/t/p/original' + p;
+    }
+    return 'https://bytes.usc.edu/cs571/s21_JSwasm00/hw/HW8/ReviewsPlaceholderImage.jpg';
+}
 
 
 /**
  * get homepage data
  */
 app.get('/', function (req, res) {
-    const homePageData = {
-        currPlaying: null,
-        popMov: null,
-        trendMov: null,
-        topMov: null,
-        popTv: null,
-        trendTv: null,
-        topTv: null
-    };
+    const homePageData = {currPlaying: null, popMov: null, trendMov: null, topMov: null, popTv: null, trendTv: null, topTv: null};
 
-    axios.all([
-        axios.get(currPlayingUrl),
-        axios.get(popMovUrl),
-        axios.get(trendMovUrl),
-        axios.get(topMovUrl),
-        axios.get(popTvUrl),
-        axios.get(trendTvUrl),
-        axios.get(topTvUrl)
-    ]).then(
+    axios.all([axios.get(currPlayingUrl), axios.get(popMovUrl), axios.get(trendMovUrl), axios.get(topMovUrl), axios.get(popTvUrl), axios.get(trendTvUrl), axios.get(topTvUrl)]).then(
         axios.spread(
             function (currPlay, popMov, trendMov, topMov, popTv, trendTv, topTv) {
                 homePageData.currPlaying = currPlay.data;
@@ -73,94 +88,37 @@ app.get('/', function (req, res) {
 });
 
 
-app.get('/topmovie', function (req, res) {
-    axios.all([
-        axios.get(topMovUrl),
-    ]).then(
-        axios.spread(
-            function (ret) {
-                res.json(ret.data);
-            }
-        )
-    ).catch(error => {
-        console.log(error);
-    });
-});
+function handleRequest(req, res) {
+    const urlMap = {
+        '/topmovie': topMovUrl,
+        '/popmovie': popMovUrl,
+        '/currentmovie': currPlayingUrl,
+        '/toptv': topTvUrl,
+        '/poptv': popTvUrl,
+        '/currenttv': trendTvUrl
+    };
 
-app.get('/popmovie', function (req, res) {
-    axios.all([
-        axios.get(popMovUrl),
-    ]).then(
-        axios.spread(
-            function (ret) {
-                res.json(ret.data);
-            }
-        )
-    ).catch(error => {
-        console.log(error);
-    });
-});
+    const apiUrl = urlMap[req.path];
+    if (!apiUrl) {
+        return res.status(404).send('Not found');
+    }
 
-app.get('/currentmovie', function (req, res) {
-    axios.all([
-        axios.get(currPlayingUrl),
-    ]).then(
-        axios.spread(
-            function (ret) {
-                res.json(ret.data);
-            }
-        )
-    ).catch(error => {
-        console.log(error);
-    });
-});
+    axios.get(apiUrl)
+        .then(response => res.json(response.data))
+        .catch(error => console.log(error));
+}
 
-app.get('/toptv', function (req, res) {
-    axios.all([
-        axios.get(topTvUrl),
-    ]).then(
-        axios.spread(
-            function (ret) {
-                res.json(ret.data);
-            }
-        )
-    ).catch(error => {
-        console.log(error);
-    });
-});
-
-app.get('/poptv', function (req, res) {
-    axios.all([
-        axios.get(popTvUrl),
-    ]).then(
-        axios.spread(
-            function (ret) {
-                res.json(ret.data);
-            }
-        )
-    ).catch(error => {
-        console.log(error);
-    });
-});
-
-app.get('/currenttv', function (req, res) {
-    axios.all([
-        axios.get(trendTvUrl),
-    ]).then(
-        axios.spread(
-            function (ret) {
-                res.json(ret.data);
-            }
-        )
-    ).catch(error => {
-        console.log(error);
-    });
-});
+app.get('/topmovie', handleRequest);
+app.get('/popmovie', handleRequest);
+app.get('/currentmovie', handleRequest);
+app.get('/toptv', handleRequest);
+app.get('/poptv', handleRequest);
+app.get('/currenttv', handleRequest);
 
 
 
 /**
- * get search data when use type in the search box
+ * get search data when use typing in the search box
  */
 app.get('/search/*', async (req, res) => {
     if (req.url.substring(8) === "") {
@@ -236,47 +194,20 @@ app.get('/watch/*/*', function (req, res) {
         axios.get(recomURL)
     ]).then(
         axios.spread(function (detail, youtube, allCast, review, similar, recom) {
-
-            let year;
             elementData.detailData = detail.data;
             elementData.youtube = youtube.data['results'][0]?.key || DEFAULT_VIDEO_ID;
             elementData.allCastData = allCast.data;
-            elementData.allCastData = {
-                cast: allCast.data.cast.filter(cast => cast.profile_path !== null)
-            };
-
-            elementData.reviewData = {
-                results: review.data.results.slice(0, 10)
-            };
-
+            elementData.allCastData = {cast: allCast.data.cast.filter(cast => cast.profile_path !== null)};
+            elementData.reviewData = {results: review.data.results.slice(0, 10)};
             for (let i = 0; i < elementData.reviewData.results.length; i++) {
-                if (elementData.reviewData.results[i]['created_at'] === null) {
-                    continue;
-                }
-                var reviewtime = "";
-                var timestamp = elementData.reviewData.results[i]['created_at'];
-                var month = monthList[parseInt(timestamp.substring(5, 7))];
-                var date = timestamp.substring(8, 10);
-                year = timestamp.substring(0, 4);
-                var minsec = timestamp.substring(13, 19);
-                var hour = parseInt(timestamp.substring(11, 13));
-                var isPM = 'AM';
-                if (hour >= 12) {
-                    isPM = 'PM';
-                    if (hour > 12) {
-                        hour -= 12;
-                    }
-                }
-                reviewtime = month + " " + date + ", " + year + " " + hour + minsec + " " + isPM;
-                elementData.reviewData.results[i]['created_at'] = reviewtime;
+                elementData.reviewData.results[i]['created_at'] = convertTimeFormat(elementData.reviewData.results[i]['created_at']);
                 elementData.reviewData.results[i]['author_details']['avatar_path'] = avatarPathParser(elementData.reviewData.results[i]['author_details']['avatar_path']);
             }
 
             elementData.similarData = similar.data;
             elementData.recomData = recom.data;
 
-            year = (elementData.detailData['release_date'] ?? elementData.detailData['first_air_date'])?.substring(0, 4) || "";
-
+            let year = (elementData.detailData['release_date'] ?? elementData.detailData['first_air_date'])?.substring(0, 4) || "";
             let time = "";
             if (elementData.detailData.runtime != null) {
                 const runtime = elementData.detailData.runtime;
@@ -311,25 +242,6 @@ app.get('/watch/*/*', function (req, res) {
         console.log(error);
     })
 });
-
-
-/**
- * this function will parse the reviewer image path in string format
- * if the path is invalid, return a default image
- * @param p the path
- * @returns {string} the reviewer image path for the front-end
- */
-function avatarPathParser(p) {
-    if (p === null || p.length === 0) {
-        return 'https://bytes.usc.edu/cs571/s21_JSwasm00/hw/HW8/ReviewsPlaceholderImage.jpg';
-    }
-    if (p.startsWith('/https')) {
-        return p.substring(1);
-    } else if (p.startsWith('/')) {
-        return 'https://image.tmdb.org/t/p/original' + p;
-    }
-    return 'https://bytes.usc.edu/cs571/s21_JSwasm00/hw/HW8/ReviewsPlaceholderImage.jpg';
-}
 
 
 /**
