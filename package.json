@@ -1,17 +1,18 @@
 {
-  "name": "hw8",
+  "name": "moviedb-angular",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --proxy-config proxy.conf.json",
+    "start": "node server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "postinstall": "ng build --prod && mv dist /app/www"
+    "heroku-postbuild": "ng build — prod"
   },
   "engines": {
-    "node": "14.17.6"
+    "node": "14.17.6",
+    "npm": "9.5.0"
   },
   "private": true,
   "dependencies": {
@@ -29,8 +30,9 @@
     "@angular/youtube-player": "^11.2.6",
     "@fortawesome/fontawesome-free": "^5.15.3",
     "@ng-bootstrap/ng-bootstrap": "^9.0.2",
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "jquery": "^3.6.0",
+    "path": "^0.12.7",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.3"

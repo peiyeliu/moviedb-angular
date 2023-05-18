@@ -4,8 +4,8 @@ threadsafe: true
 
 handlers:
   - url: /
-    static_files: dist/HW8/index.html
-    upload: dist/HW8/index.html
+    static_files: dist/moviedb-angular/index.html
+    upload: dist/moviedb-angular/index.html
 
   - url: /
-    static_dir: dist/HW8
+    static_dir: dist/moviedb-angular

@@ -16,7 +16,7 @@ export class Service{
   private REST_API_SERVER: string;
 
   constructor(private httpClient: HttpClient) {
-    this.REST_API_SERVER = '/api';
+    this.REST_API_SERVER = 'https://moviedb-angular-backend.herokuapp.com';
   }
 
   getSearchResult(term): Observable<any>{
