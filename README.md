@@ -1,7 +1,12 @@
-# moviedb-angular
-Movie database Angular web project
-This project is for CSCI571 "Web Technologies" course. 
-Movie database was provided by TMDb: https://www.themoviedb.org/
+# AngularFlix
+**AngularFlix** is a web application designed using the Angular framework to provide comprehensive movie information.
+
+**Project description**: see my personal page: https://peiyeliu.github.io/project-details/angular-moviedb
+
+This project is deployed at: https://moviedb-angular.herokuapp.com/
+
+This project is part of the assignments in USC CSCI571 "Web Technologies" course. Movie database was provided by TMDb: https://www.themoviedb.org/
+
 
 Features:
 1. Responsive design: for both PC and mobile view.
@@ -11,8 +16,9 @@ Features:
 5. Search box and watch list function were implemented.
 6. Bootstrap was introduced to provide clean web page styles.
 
-Use:
+Run the project in local environment:
 1. Download all the files and put in an empty folder.
 2. In the project root folder and "backend" sub-folder, type "npm install" to install all required packages.
 3. In the "backend" sub-folder, type "node app.js" to run the backend code.
 4. In the project root folder, type "npm run" to run the project. Then visit: http://localhost:4200/
+
