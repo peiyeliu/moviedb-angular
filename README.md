@@ -3,8 +3,6 @@
 
 **Project description**: see my personal page: https://peiyeliu.github.io/project-details/angular-moviedb
 
-This project is deployed at: https://moviedb-angular.herokuapp.com/
-
 This project is part of the assignments in USC CSCI571 "Web Technologies" course. Movie database was provided by TMDb: https://www.themoviedb.org/
 
 
